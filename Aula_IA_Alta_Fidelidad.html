@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Prototipo de alta fidelidad de Aula IA">
+  <title>Aula IA | Prototipo de alta fidelidad</title>
+
+  <!--
+    ESTILOS
+    Contiene los estilos originales del prototipo.
+    Se mantiene dentro de este archivo HTML para poder compartirlo directamente.
+  -->
+  <style>
+    :root {
+      --ink: #152a37;
+      --ink2: #355264;
+      --muted: #708693;
+      --edge: #dce7e9;
+      --paper: #f5f8f8;
+      --white: #fff;
+      --teal: #087e80;
+      --teal2: #11a39b;
+      --glow: #e4f7f2;
+      --accent: #e1a84b;
+      --radius: 18px;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      font-family: Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 14px;
+    }
+    button,input,select,textarea {
+      font: inherit;
+    }
+    button {
+      cursor: pointer;
+    }
+    button:disabled {
+      cursor: not-allowed;
+      opacity: .55;
+    }
+    button:focus-visible,input:focus-visible,textarea:focus-visible {
+      outline: 3px solid #7dd3c8;
+      outline-offset: 2px;
+    }
+    button,.action,.nav-link {
+      transition: transform .15s ease,background .15s ease,border-color .15s ease;
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+    .shell {
+      display: grid;
+      grid-template-columns: 248px minmax(0,1fr);
+      min-height: 100vh;
+    }
+    .side {
+      background: #122b3b;
+      color: #d4e2e7;
+      padding: 25px 16px 19px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 19px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 12px 14px;
+      color: white;
+      font-weight: 800;
+      letter-spacing: -.4px;
+      font-size: 23px;
+    }
+    .mark {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 35px;
+      height: 35px;
+      border-radius: 11px;
+      background: #21afa1;
+      color: white;
+      font-weight: 900;
+      font-size: 15px;
+      letter-spacing: -1px;
+    }
+    .side-section {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #89a7b3;
+      padding: 0 14px;
+      font-weight: 800;
+    }
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .nav-link {
+      border: 0;
+      background: transparent;
+      color: #c0d3dc;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      border-radius: 11px;
+      padding: 12px 12px;
+      font-weight: 580;
+      width: 100%;
+    }
+    .nav-link svg {
+      width: 18px;
+      height: 18px;
+      flex: none;
+    }
+    .nav-link.active {
+      background: #1b4650;
+      color: white;
+      box-shadow: inset 3px 0 #2acbb5;
+    }
+    .nav-link:hover {
+      background: #1c3c4c;
+    }
+    .side-bottom {
+      margin-top: auto;
+      border-top: 1px solid #37505d;
+      padding: 16px 11px 3px;
+      color: #aec4ce;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+    .side-bottom b {
+      color: #fff;
+    }
+    .main {
+      min-width: 0;
+    }
+    .topbar {
+      height: 76px;
+      background: #fff;
+      border-bottom: 1px solid #e5ecec;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 36px;
+      gap: 12px;
+    }
+    .top-left {
+      font-weight: 690;
+      color: #263f4c;
+      font-size: 15px;
+    }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #e8f7f4;
+      color: #0d706b;
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 11px;
+      font-weight: 750;
+    }
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #d9efe8;
+      color: #075e5d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 780;
+      font-size: 12px;
+    }
+    .content {
+      padding: 32px 36px 55px;
+      max-width: 1280px;
+      margin: auto;
+    }
+    .eyebrow {
+      color: #078982;
+      text-transform: uppercase;
+      letter-spacing: 1.3px;
+      font-size: 11px;
+      font-weight: 850;
+      margin-bottom: 9px;
+    }
+    .page-title {
+      font-size: 31px;
+      letter-spacing: -1.1px;
+      margin: 0 0 8px;
+      font-weight: 790;
+    }
+    .sub {
+      color: #6e8590;
+      line-height: 1.6;
+      margin: 0 0 23px;
+      max-width: 790px;
+    }
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .grid3 {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 18px;
+    }
+    .grid4 {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 16px;
+    }
+    .panel {
+      background: white;
+      border: 1px solid #e2eaec;
+      border-radius: var(--radius);
+      box-shadow: 0 5px 22px rgba(16,44,55,.035);
+      padding: 24px;
+    }
+    .panel.tight {
+      padding: 17px;
+    }
+    .panel h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
+      letter-spacing: -.4px;
+    }
+    .panel p {
+      line-height: 1.55;
+      color: #6a808b;
+    }
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 11px;
+      padding: 11px 16px;
+      font-weight: 760;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .btn.primary {
+      background: #078782;
+      color: #fff;
+    }
+    .btn.primary:hover {
+      background: #056e6a;
+    }
+    .btn.secondary {
+      background: white;
+      border-color: #ccdddd;
+      color: #235564;
+    }
+    .btn.secondary:hover {
+      background: #edf8f6;
+    }
+    .btn.soft {
+      background: #e4f6f1;
+      color: #087873;
+    }
+    .btn.ghost {
+      background: transparent;
+      color: #697f88;
+    }
+    .btn.large {
+      padding: 15px 22px;
+      font-size: 15px;
+    }
+    .btn.full {
+      width: 100%;
+    }
+    .btn.small {
+      padding: 8px 11px;
+      font-size: 12px;
+    }
+    .muted {
+      color: #708591;
+    }
+    .small {
+      font-size: 12px;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .between {
+      justify-content: space-between;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 780;
+      letter-spacing: -.35px;
+      margin: 28px 0 15px;
+    }
+    .rule {
+      height: 1px;
+      background: #e7edee;
+      margin: 19px 0;
+    }
+    .card-link {
+      cursor: pointer;
+    }
+    .card-link:hover {
+      border-color: #75c2b7;
+      box-shadow: 0 10px 28px rgba(21,98,95,.09);
+    }
+    .pill {
+      border: 1px solid #dce7e8;
+      color: #52727a;
+      border-radius: 9px;
+      padding: 5px 9px;
+      display: inline-flex;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 730;
+    }
+    .pill.teal {
+      background: #e7f6f3;
+      border-color: #d3eeea;
+      color: #0b8177;
+    }
+    .pill.gold {
+      background: #fff4de;
+      border-color: #f8e6be;
+      color: #93641d;
+    }
+    .pill.gray {
+      background: #f1f5f5;
+      border-color: #edf2f3;
+    }
+    .progress {
+      width: 100%;
+      height: 9px;
+      background: #e8eff0;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress > span {
+      display: block;
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg,#0b918a,#40cdb6);
+    }
+    .hero {
+      background: linear-gradient(115deg,#0c3747 0%,#104e53 65%,#0b766e 100%);
+      border-radius: 22px;
+      min-height: 255px;
+      color: white;
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero:after {
+      content: "";
+      width: 310px;
+      height: 310px;
+      border: 1px solid #56c4b955;
+      border-radius: 50%;
+      position: absolute;
+      right: -100px;
+      top: -135px;
+    }
+    .hero:before {
+      content: "";
+      width: 220px;
+      height: 220px;
+      border: 1px solid #56c4b955;
+      border-radius: 50%;
+      position: absolute;
+      right: 55px;
+      bottom: -160px;
+    }
+    .hero-content {
+      max-width: 620px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero h1 {
+      font-size: 32px;
+      line-height: 1.18;
+      letter-spacing: -1.2px;
+      margin: 8px 0 12px;
+    }
+    .hero p {
+      line-height: 1.6;
+      color: #c7eee6;
+      max-width: 570px;
+    }
+    .orb {
+      width: 165px;
+      height: 165px;
+      border: 20px solid #4fc1ad33;
+      box-shadow: 0 0 0 25px #4fc1ad18;
+      border-radius: 45%;
+      transform: rotate(-25deg);
+      margin-right: 45px;
+    }
+    .stat {
+      text-align: left;
+      padding: 21px;
+    }
+    .stat .n {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-top: 12px;
+    }
+    .stat .lab {
+      color: #6d8490;
+      font-size: 12px;
+    }
+    .glyph {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e1f5f1;
+      color: #07847c;
+      font-weight: 800;
+    }
+    .glyph svg {
+      width: 21px;
+      height: 21px;
+    }
+    .course-art {
+      height: 100px;
+      border-radius: 13px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .course-art:before {
+      content: "";
+      width: 110px;
+      height: 110px;
+      border: 2px solid #ffffff80;
+      transform: rotate(23deg);
+      border-radius: 23px;
+      position: absolute;
+      right: -30px;
+      top: -30px;
+    }
+    .course-art span {
+      font-size: 25px;
+      font-weight: 900;
+      letter-spacing: -1.2px;
+      color: white;
+      position: relative;
+    }
+    .course-card h3 {
+      font-size: 16px;
+      margin: 12px 0 7px;
+    }
+    .course-card p {
+      margin: 0 0 18px;
+      font-size: 12px;
+      min-height: 38px;
+    }
+    .course-card .meta {
+      font-size: 11px;
+      color: #66818a;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 15px 0 22px;
+    }
+    .filter {
+      padding: 9px 13px;
+      background: white;
+      border: 1px solid #dae6e7;
+      color: #48616a;
+      border-radius: 10px;
+      font-weight: 720;
+      font-size: 12px;
+    }
+    .filter.active {
+      background: #0b7777;
+      color: white;
+      border-color: #0b7777;
+    }
+    .search {
+      background: #fff;
+      border: 1px solid #dae6e7;
+      border-radius: 11px;
+      padding: 12px 13px;
+      width: 100%;
+      outline: none;
+    }
+    .search:focus {
+      border-color: #0d9387;
+      box-shadow: 0 0 0 3px #cdf1e8;
+    }
+    .field {
+      margin: 12px 0 18px;
+    }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 750;
+      margin-bottom: 8px;
+      color: #344e5b;
+    }
+    .field input,.field textarea,.field select {
+      width: 100%;
+      border: 1px solid #d7e3e5;
+      background: white;
+      border-radius: 11px;
+      padding: 13px 14px;
+      outline: none;
+    }
+    .field textarea {
+      resize: vertical;
+      min-height: 143px;
+      line-height: 1.6;
+    }
+    .field input:focus,.field textarea:focus {
+      border-color: #0a968b;
+      box-shadow: 0 0 0 3px #dff7f1;
+    }
+    .feature {
+      padding: 18px;
+      border-radius: 15px;
+      border: 1px solid #e3eded;
+      background: #fff;
+      margin-bottom: 12px;
+    }
+    .feature h4 {
+      margin: 0 0 7px;
+    }
+    .feature p {
+      margin: 0;
+      color: #6b838e;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .grid2-1 {
+      display: grid;
+      grid-template-columns: 1.65fr 1fr;
+      gap: 20px;
+    }
+    .list-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid #edf1f2;
+    }
+    .list-row:last-child {
+      border: 0;
+    }
+    .lesson-body {
+      font-size: 15px;
+      color: #48626d;
+      line-height: 1.8;
+      max-width: 780px;
+    }
+    .lesson-body h3 {
+      color: #203a47;
+      font-size: 20px;
+    }
+    .callout {
+      background: #ecf8f5;
+      border: 1px solid #d4ede7;
+      padding: 18px;
+      border-radius: 13px;
+      color: #275e60;
+      line-height: 1.6;
+      margin: 19px 0;
+    }
+    .codebox {
+      background: #f0f5f6;
+      border: 1px solid #d9e7e8;
+      border-radius: 12px;
+      padding: 17px;
+      color: #335663;
+      line-height: 1.65;
+    }
+    .tabrow {
+      display: flex;
+      gap: 8px;
+      padding: 4px;
+      background: #eef3f4;
+      border-radius: 11px;
+      width: fit-content;
+      margin: 18px 0;
+    }
+    .tab {
+      border: none;
+      background: transparent;
+      color: #68828b;
+      padding: 9px 15px;
+      border-radius: 8px;
+      font-weight: 720;
+    }
+    .tab.active {
+      background: white;
+      color: #0b7775;
+      box-shadow: 0 2px 8px #3448;
+    }
+    .tool-head {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+    }
+    .tool-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: #e8f5f2;
+      display: grid;
+      place-items: center;
+      color: #0a8079;
+      font-size: 17px;
+      font-weight: 820;
+    }
+    .table-wrap {
+      overflow: auto;
+      background: white;
+      border: 1px solid #e0e9ea;
+      border-radius: 15px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 650px;
+    }
+    th,td {
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid #e8eeee;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    th {
+      background: #f6faf9;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      color: #587681;
+    }
+    tr:last-child td {
+      border: 0;
+    }
+    .result {
+      border: 1px solid #d9e8e8;
+      border-radius: 14px;
+      background: #f9fcfb;
+      padding: 19px;
+      margin-top: 18px;
+    }
+    .score {
+      font-size: 44px;
+      font-weight: 800;
+      color: #0c8780;
+      letter-spacing: -2px;
+    }
+    .quiz-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      width: 100%;
+      border: 1px solid #dbe5e7;
+      background: white;
+      border-radius: 12px;
+      padding: 14px;
+      margin: 9px 0;
+      font-weight: 600;
+      color: #315260;
+    }
+    .quiz-option:hover {
+      border-color: #4ebab3;
+      background: #f3faf8;
+    }
+    .quiz-option.selected {
+      background: #e5f7f2;
+      border-color: #0c8c82;
+    }
+    .q-letter {
+      width: 25px;
+      height: 25px;
+      background: #eff4f4;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 11px;
+    }
+    .mini {
+      font-size: 11px;
+      color: #718691;
+    }
+    .welcome {
+      min-height: 100vh;
+      background: radial-gradient(circle at 70% 15%,#e0f8ed,transparent 38%),linear-gradient(135deg,#f4f9f8,#e9f3f1);
+      padding: 28px 48px;
+    }
+    .welcome-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .welcome-main {
+      max-width: 1170px;
+      margin: 58px auto 0;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .welcome h1 {
+      font-size: 58px;
+      letter-spacing: -2.5px;
+      line-height: 1.08;
+      margin: 15px 0 21px;
+    }
+    .welcome h1 span {
+      color: #0a9286;
+    }
+    .welcome p {
+      font-size: 17px;
+      line-height: 1.7;
+      color: #627e88;
+      max-width: 520px;
+    }
+    .preview {
+      background: white;
+      padding: 19px;
+      border-radius: 25px;
+      box-shadow: 0 23px 65px #1e55551c;
+      border: 1px solid #dcece8;
+      transform: rotate(1deg);
+    }
+    .preview-inside {
+      background: #f5faf8;
+      border: 1px solid #dfefea;
+      padding: 23px;
+      border-radius: 14px;
+    }
+    .preview .mockcard {
+      border-radius: 13px;
+      background: white;
+      border: 1px solid #e1ebe8;
+      padding: 17px;
+      margin-top: 15px;
+    }
+    .auth {
+      min-height: 100vh;
+      background: linear-gradient(115deg,#122c3a 0%,#144956 100%);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .auth-aside {
+      color: #fff;
+      padding: 70px 55px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .auth-aside h1 {
+      font-size: 42px;
+      letter-spacing: -1.4px;
+      max-width: 510px;
+    }
+    .auth-aside p {
+      color: #bfdddd;
+      line-height: 1.7;
+      max-width: 440px;
+    }
+    .auth-right {
+      background: #f8fbfa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 35px;
+    }
+    .auth-box {
+      width: 100%;
+      max-width: 420px;
+    }
+    .profile-option {
+      border: 1px solid #dce8e9;
+      border-radius: 17px;
+      padding: 23px;
+      cursor: pointer;
+      background: white;
+      text-align: left;
+      min-height: 158px;
+    }
+    .profile-option:hover {
+      border-color: #6ebdb6;
+    }
+    .profile-option.selected {
+      background: #e9f8f4;
+      border-color: #0c9086;
+      box-shadow: 0 0 0 2px #bfeee4;
+    }
+    .profile-option h3 {
+      margin: 14px 0 5px;
+    }
+    .profile-option p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      right: 23px;
+      background: #143843;
+      color: #fff;
+      box-shadow: 0 10px 30px #0002;
+      border-radius: 12px;
+      padding: 14px 17px;
+      z-index: 99;
+      font-size: 12px;
+      max-width: 340px;
+    }
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: #0c2d3c96;
+      display: grid;
+      place-items: center;
+      z-index: 98;
+      padding: 24px;
+    }
+    .modal-dialog {
+      width: min(600px,100%);
+      max-height: 90vh;
+      overflow: auto;
+      background: white;
+      border-radius: 20px;
+      padding: 27px;
+      box-shadow: 0 25px 70px #112e3870;
+    }
+    .empty {
+      padding: 35px;
+      text-align: center;
+      border: 1px dashed #cbdcde;
+      background: #fafdfc;
+      border-radius: 13px;
+      color: #66818b;
+    }
+    .screen-stamp {
+      position: fixed;
+      bottom: 12px;
+      left: 265px;
+      font-size: 10px;
+      color: #7d969b;
+      pointer-events: none;
+    }
+    .welcome .screen-stamp,.auth .screen-stamp {
+      left: 18px;
+      color: #bfdad7;
+    }
+    .mutebtn {
+      border: none;
+      background: transparent;
+      color: #6f8890;
+      cursor: pointer;
+      padding: 3px;
+    }
+    .footnote {
+      font-size: 11px;
+      color: #7c929b;
+      margin-top: 18px;
+      line-height: 1.5;
+    }
+    .cert {
+      background: linear-gradient(135deg,#fff,#f3faf6);
+      border: 7px double #bfd7cf;
+      min-height: 240px;
+      padding: 24px;
+      text-align: center;
+      border-radius: 6px;
+    }
+    .cert h2 {
+      font-family: Georgia,serif;
+      color: #14615e;
+      font-size: 24px;
+    }
+    .cert .big {
+      font-size: 19px;
+      font-weight: 760;
+      letter-spacing: -.5px;
+    }
+    .cert p {
+      color: #638188;
+    }
+    .checkbox {
+      accent-color: #0e9084;
+    }
+    @media(max-width:1050px) {
+      .grid4,.grid3 {
+        grid-template-columns: repeat(2,1fr);
+      }
+      .grid2-1 {
+        grid-template-columns: 1fr;
+      }
+      .hero .orb {
+        display: none;
+      }
+      .welcome-main {
+        grid-template-columns: 1fr;
+      }
+      .welcome h1 {
+        font-size: 45px;
+      }
+    }
+    @media(max-width:760px) {
+      .shell {
+        display: block;
+      }
+      .side {
+        height: auto;
+        position: static;
+        padding: 10px;
+        gap: 0;
+      }
+      .side-section,.side-bottom {
+        display: none;
+      }
+      .brand {
+        font-size: 18px;
+      }
+      .nav {
+        display: flex;
+        flex-direction: row;
+        overflow: auto;
+      }
+      .nav-link {
+        width: auto;
+        white-space: nowrap;
+        font-size: 11px;
+      }
+      .nav-link svg {
+        display: none;
+      }
+      .topbar {
+        height: auto;
+        min-height: 60px;
+        padding: 13px 18px;
+      }
+      .top-actions .tag {
+        display: none;
+      }
+      .content {
+        padding: 22px 16px;
+      }
+      .grid3,.grid4,.grid2 {
+        grid-template-columns: 1fr;
+      }
+      .page-title {
+        font-size: 25px;
+      }
+      .hero {
+        padding: 23px;
+        min-height: 220px;
+      }
+      .hero h1 {
+        font-size: 27px;
+      }
+      .welcome {
+        padding: 18px;
+      }
+      .welcome-main {
+        margin-top: 32px;
+        gap: 25px;
+      }
+      .welcome h1 {
+        font-size: 38px;
+      }
+      .auth {
+        grid-template-columns: 1fr;
+      }
+      .auth-aside {
+        padding: 30px;
+      }
+      .auth-aside h1 {
+        font-size: 28px;
+      }
+      .auth-right {
+        min-height: 50vh;
+      }
+      .screen-stamp {
+        display: none;
+      }
+    }
+    @media print {
+      .side,.topbar,.screen-stamp,.btn {
+        display: none!important;
+      }
+      .shell {
+        display: block;
+      }
+      .content {
+        padding: 5px;
+      }
+      .panel {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- El contenido del prototipo se construye desde el script inferior. -->
+  <div id="app"></div>
+
+  <!--
+    COMPORTAMIENTO
+    Contiene las pantallas, la navegación y las acciones de demostración.
+    No utiliza servicios externos ni una base de datos.
+  -->
+  <script>
+    const NAV = [
+      ['inicio', 'Inicio', 'home'],
+      ['perfiles', 'Rutas por perfil', 'users'],
+      ['catalogo', 'Catálogo de cursos', 'book'],
+      ['leccion', 'Lección de ejemplo', 'file'],
+      ['comparador', 'Comparador de IA', 'layers'],
+      ['laboratorio', 'Laboratorio de prompts', 'spark'],
+      ['recursos', 'Biblioteca de recursos', 'folder'],
+      ['responsable', 'Uso responsable', 'shield'],
+      ['evaluacion', 'Evaluación', 'check'],
+      ['progreso', 'Mi progreso', 'chart']
+    ];
+    const icons = {
+      home: '<path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/>',
+      users: '<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2"/><path d="M17 11a3 3 0 1 0-1-6"/><path d="M21 20v-2a5 5 0 0 0-4-5"/>',
+      book: '<path d="M3 4h8a4 4 0 0 1 4 4v13a4 4 0 0 0-4-4H3z"/><path d="M21 4h-2a4 4 0 0 0-4 4v13a4 4 0 0 1 4-4h2z"/>',
+      file: '<path d="M5 3h9l5 5v13H5z"/><path d="M14 3v5h5M8 13h8M8 17h8"/>',
+      layers: '<path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5"/>',
+      spark: '<path d="m12 2 2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"/>',
+      folder: '<path d="M3 7V5h7l2 3h9v12H3z"/>',
+      shield: '<path d="m12 2 9 4v6c0 6-4 9-9 10-5-1-9-4-9-10V6z"/><path d="m8 12 3 3 5-6"/>',
+      check: '<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+      chart: '<rect x="4" y="11" width="3" height="9"/><rect x="10" y="7" width="3" height="13"/><rect x="16" y="3" width="3" height="17"/>',
+      arrow: '<path d="M5 12h14m-6-6 6 6-6 6"/>',
+      back: '<path d="M19 12H5m6 6-6-6 6-6"/>',
+      clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+      lock: '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+      star: '<path d="m12 2 3 6 7 .8-5 4.9 1.3 7-6.3-3.4-6.3 3.4 1.3-7L2 8.8 9 8z"/>'
+    };
+    function icon(n, size = 18) {
+      return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[n] || icons.spark}</svg>`;
+    }
+    function esc(x) {
+      return String(x).replace(/[&<>"']/g, c => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[c]));
+    }
+    const courses = [
+      {
+        id: 0,
+        title: 'Redacción profesional con IA',
+        short: 'Correos, informes y textos claros con herramientas de IA.',
+        cat: 'Comunicación',
+        level: 'Inicial',
+        lessons: 6,
+        art: '#0c7e82',
+        abbr: 'Aa',
+        time: '42 min'
+      },
+      {
+        id: 1,
+        title: 'Organiza información sin complicarte',
+        short: 'Clasifica documentos, resume y estructura información.',
+        cat: 'Productividad',
+        level: 'Inicial',
+        lessons: 5,
+        art: '#487aa9',
+        abbr: '01',
+        time: '35 min'
+      },
+      {
+        id: 2,
+        title: 'Prompts efectivos desde cero',
+        short: 'Aprende a dar contexto y obtener resultados más útiles.',
+        cat: 'Fundamentos',
+        level: 'Inicial',
+        lessons: 6,
+        art: '#8768bc',
+        abbr: '>_',
+        time: '45 min'
+      },
+      {
+        id: 3,
+        title: 'IA segura y responsable',
+        short: 'Protege datos y verifica información antes de utilizarla.',
+        cat: 'Seguridad',
+        level: 'Inicial',
+        lessons: 4,
+        art: '#b98542',
+        abbr: '✓',
+        time: '30 min'
+      },
+      {
+        id: 4,
+        title: 'IA para resolver casos técnicos',
+        short: 'Diagnostica casos y organiza pasos de soporte.',
+        cat: 'Tecnología',
+        level: 'Intermedio',
+        lessons: 6,
+        art: '#476b71',
+        abbr: '<>',
+        time: '50 min'
+      },
+      {
+        id: 5,
+        title: 'Creatividad y contenidos con IA',
+        short: 'Bocetos, ideas y piezas para proyectos de comunicación.',
+        cat: 'Creatividad',
+        level: 'Inicial',
+        lessons: 5,
+        art: '#d1817c',
+        abbr: '✦',
+        time: '38 min'
+      }
+    ];
+    const profiles = [
+      { title: 'Administración y gestión', desc: 'Documentos, reportes y organización de tareas.', symbol: 'AG' },
+      { title: 'Tecnología y soporte', desc: 'Análisis de casos, documentación técnica y código.', symbol: 'TS' },
+      { title: 'Comercial y atención', desc: 'Mensajes, atención y propuestas comerciales.', symbol: 'CA' },
+      { title: 'Creatividad y comunicación', desc: 'Ideas, publicidad y producción de contenido.', symbol: 'CC' },
+      { title: 'Formación académica', desc: 'Investigación, lecturas, organización y estudio.', symbol: 'FA' }
+    ];
+    const resources = [
+      { title: 'Plantilla: redactar un correo claro', cat: 'Comunicación', body: 'Actúa como asistente de redacción. Contexto: [situación]. Destinatario: [audiencia]. Objetivo: [acción]. Redacta un correo cordial de máximo 150 palabras y evita inventar información.' },
+      { title: 'Guía de resumen de documentos', cat: 'Productividad', body: 'Resume el siguiente documento en cinco ideas clave. Distingue hechos, conclusiones y datos por verificar. Si falta información, indícalo.' },
+      { title: 'Checklist para verificar respuestas', cat: 'Seguridad', body: '1. Comprueba la fuente original. 2. No compartas datos privados. 3. Contrasta cifras o fechas. 4. Revisa sesgos y omisiones. 5. Valida el resultado antes de enviarlo.' },
+      { title: 'Prompt para diagnóstico técnico', cat: 'Tecnología', body: 'Eres un orientador técnico. Describe posibles causas del problema [síntoma] y propone verificaciones no destructivas paso a paso. Pregunta por los datos que falten.' }
+    ];
+    const questions = [
+      {
+        q: '¿Qué conviene incluir en un prompt para obtener mejores resultados?',
+        a: ['Solo una palabra', 'Contexto, objetivo y formato esperado', 'Datos personales de terceros'],
+        ok: 1,
+        why: 'La instrucción mejora al indicar contexto, objetivo y formato.'
+      },
+      {
+        q: '¿Cuál es un uso adecuado de IA en documentos laborales?',
+        a: ['Enviar respuestas sin revisar', 'Compartir información privada sin permiso', 'Revisar y verificar el texto antes de usarlo'],
+        ok: 2,
+        why: 'Los resultados deben verificarse y ajustarse al contexto.'
+      },
+      {
+        q: '¿Qué herramienta elegirías para una tarea?',
+        a: ['La que mejor se ajuste a la necesidad', 'Siempre la más popular', 'Cualquiera sin comparar'],
+        ok: 0,
+        why: 'Conviene evaluar capacidades, restricciones y contexto de uso.'
+      },
+      {
+        q: '¿Qué hacer si una respuesta de IA incluye una cifra importante?',
+        a: ['Dar por hecho que es correcta', 'Contrastar con una fuente confiable', 'Publicarla sin leer'],
+        ok: 1,
+        why: 'Las cifras y afirmaciones importantes requieren verificación.'
+      }
+    ];
+    const S = {
+      profile: 0,
+      course: 0,
+      courseFilter: 'Todos',
+      lessonTab: 'contenido',
+      lessonComplete: false,
+      promptResult: null,
+      quizIdx: 0,
+      quizAnswers: {},
+      quizScore: null,
+      safeChoice: null,
+      resource: null,
+      toast: null,
+      email: '',
+      name: 'Participante',
+      onboarding: false
+    };
+    function go(p) {
+      location.hash = p;
+      render();
+      window.scrollTo(0, 0);
+    }
+    function header(title) {
+      return `<div class="eyebrow">PROTOTIPO INTERACTIVO · AULA IA</div><h1 class="page-title">${title}</h1>`;
+    }
+    function shell(page, content) {
+      return `<div class="shell"><aside class="side"><div class="brand"><span class="mark">AI</span> Aula IA</div><div class="side-section">Aprendizaje</div><nav class="nav">${NAV.map(([id, t, ico]) => `<button class="nav-link ${page === id ? 'active' : ''}" data-go="${id}" aria-label="Abrir ${t}">${icon(ico)} ${t}</button>`).join('')}</nav><div class="side-bottom"><b>Proyecto académico</b><br>Prototipo demostrativo de alta fidelidad.<br>Las respuestas de IA y los datos son simulados.</div></aside><div class="main"><header class="topbar"><span class="top-left">${NAV.find(x => x[0] === page)?.[1] || 'Aula IA'}</span><div class="top-actions"><span class="tag">${icon('check', 13)} Modo demostración</span><button class="btn ghost small" data-act="reset">Reiniciar</button><div class="avatar">${S.name.slice(0, 2).toUpperCase()}</div></div></header><main class="content">${content}</main></div></div><div class="screen-stamp">AULA IA · ALTA FIDELIDAD · SIN SERVICIOS EXTERNOS</div>`;
+    }
+    function welcome() {
+      return `<div class="welcome"><header class="welcome-head"><div class="brand" style="color:#143c48;padding:0"><span class="mark">AI</span> Aula IA</div><div class="row"><span class="pill teal">Prototipo académico</span><button class="btn secondary" data-go="ingreso">Ingresar</button></div></header><div class="welcome-main"><section><div class="eyebrow">TU APRENDIZAJE EMPIEZA AQUÍ</div><h1>Aprende inteligencia artificial <span>con tareas reales.</span></h1><p>Rutas cortas, ejemplos prácticos y ejercicios para crear documentos, organizar información y utilizar la IA con criterio.</p><div class="row" style="margin-top:25px;flex-wrap:wrap"><button class="btn primary large" data-go="ingreso">Comenzar ahora ${icon('arrow')}</button><button class="btn secondary large" data-go="catalogo">Explorar cursos</button></div><p class="small" style="margin-top:25px;font-size:12px">Experiencia simulada para validación de interfaz. No se requiere cuenta real.</p></section><div class="preview"><div class="preview-inside"><div class="between row"><span class="pill teal">Mi aprendizaje</span><span class="small muted">Sesión demostrativa</span></div><h3 style="font-size:22px;letter-spacing:-.7px;margin-top:15px">Bienvenido a Aula IA</h3><p style="font-size:12px;margin:7px 0 18px">Aprende a tu ritmo y practica con casos de uso.</p><div class="mockcard"><div class="row">${icon('book', 21)}<div><b>Redacción profesional con IA</b><div class="small muted">Ruta recomendada</div></div></div><div class="progress" style="margin-top:16px"><span style="width:36%"></span></div></div><div class="grid2" style="margin-top:14px;gap:10px"><div class="mockcard" style="margin:0"><b>01</b><div class="mini">Selecciona tu ruta</div></div><div class="mockcard" style="margin:0"><b>02</b><div class="mini">Practica y aprende</div></div></div></div></div></div><div class="screen-stamp">ALTA FIDELIDAD · PANTALLA 01</div></div>`;
+    }
+    function ingreso() {
+      return `<div class="auth"><aside class="auth-aside"><div class="brand" style="padding:0"><span class="mark">AI</span> Aula IA</div><h1>Todo aprendizaje comienza con un primer paso.</h1><p>Explora una experiencia de formación sobre inteligencia artificial, con cursos y actividades demostrativas.</p><div class="pill" style="border-color:#4b6b72;color:#bee2dc;width:fit-content">Prototipo: datos de ejemplo</div></aside><div class="auth-right"><div class="auth-box"><div class="eyebrow">ACCESO A AULA IA</div><h1 class="page-title" style="font-size:28px">Bienvenido de nuevo</h1><p class="sub">Ingresa para recorrer la plataforma de prueba.</p><form id="form-login"><div class="field"><label>Correo electrónico</label><input required type="email" name="email" placeholder="nombre@ejemplo.com" autocomplete="off" value="${esc(S.email)}"></div><div class="field"><label>Contraseña de demostración</label><input required minlength="4" type="password" name="password" placeholder="Mínimo 4 caracteres"></div><button class="btn primary full large" type="submit">Acceder al prototipo ${icon('arrow')}</button></form><button class="btn secondary full" style="margin-top:12px" data-act="guest">Continuar como invitado</button><p class="footnote">No se envía ni almacena información en servidores. El acceso es simulado.</p></div></div><div class="screen-stamp">ALTA FIDELIDAD · PANTALLA 02</div></div>`;
+    }
+    function perfiles() {
+      return shell('perfiles', `${header('Elige una ruta que se adapte a ti')}<p class="sub">Personaliza la experiencia seleccionando el ámbito donde quieres aplicar herramientas de inteligencia artificial.</p><div class="grid3">${profiles.map((p, i) => `<button class="profile-option ${S.profile === i ? 'selected' : ''}" data-act="profile" data-i="${i}"><span class="glyph">${p.symbol}</span><h3>${p.title}</h3><p>${p.desc}</p></button>`).join('')}</div><div class="row" style="margin-top:24px"><button class="btn primary large" data-go="inicio">Continuar con ${profiles[S.profile].title} ${icon('arrow')}</button><button class="btn secondary" data-go="catalogo">Ver todos los cursos</button></div>`);
+    }
+    function dashboard() {
+      return shell('inicio', `${header('Hola, ' + (S.name === 'Participante' ? 'participante' : esc(S.name)))}<p class="sub">Continúa aprendiendo a utilizar herramientas de IA en actividades concretas.</p><div class="hero"><div class="hero-content"><span class="pill" style="color:#d7fff7;border-color:#74aead;background:#28616b">RUTA RECOMENDADA</span><h1>Escribe mejor, organiza más y aprovecha la IA.</h1><p>Comienza con una lección corta y practica cómo construir instrucciones útiles para tu día a día.</p><button class="btn" style="background:#fff;color:#0d655e" data-go="leccion">Continuar aprendiendo ${icon('arrow')}</button></div><div class="orb"></div></div><div class="grid3" style="margin-top:19px"><div class="panel stat"><span class="glyph">${icon('book', 21)}</span><div class="n">6</div><div class="lab">Cursos disponibles</div></div><div class="panel stat"><span class="glyph">${icon('chart', 21)}</span><div class="n">${S.lessonComplete ? '1' : '0'}/1</div><div class="lab">Lección de prueba completada</div></div><div class="panel stat"><span class="glyph">${icon('check', 21)}</span><div class="n">${S.quizScore === null ? '—' : S.quizScore + '/4'}</div><div class="lab">Evaluación de muestra</div></div></div><h2 class="section-title">Tu próximo paso</h2><div class="grid2"><article class="panel card-link" data-go="catalogo"><div class="row between"><span class="glyph">${icon('book')}</span><span class="pill teal">Explorar</span></div><h3 style="margin-top:17px">Encuentra una formación para ti</h3><p>Revisa cursos por tema, duración y nivel.</p><span class="btn soft small">Ver catálogo ${icon('arrow', 14)}</span></article><article class="panel card-link" data-go="laboratorio"><div class="row between"><span class="glyph">${icon('spark')}</span><span class="pill gold">Practicar</span></div><h3 style="margin-top:17px">Mejora tus instrucciones a la IA</h3><p>Prueba el laboratorio con sugerencias demostrativas.</p><span class="btn soft small">Abrir laboratorio ${icon('arrow', 14)}</span></article></div>`);
+    }
+    function catalogo() {
+      let cs = courses.filter(c => S.courseFilter === 'Todos' || c.cat === S.courseFilter);
+      return shell('catalogo', `${header('Cursos que se adaptan a tus tareas')}<p class="sub">Explora rutas breves diseñadas para aplicar herramientas de inteligencia artificial con criterio.</p><div class="row between" style="flex-wrap:wrap"><span class="pill teal">6 rutas de aprendizaje</span><button class="btn secondary" data-go="perfiles">Cambiar perfil ${icon('users')}</button></div><div class="filters">${[
+        'Todos',
+        'Comunicación',
+        'Productividad',
+        'Fundamentos',
+        'Seguridad',
+        'Tecnología',
+        'Creatividad'
+      ].map(c => `<button class="filter ${S.courseFilter === c ? 'active' : ''}" data-act="course-filter" data-filter="${c}">${c}</button>`).join('')}</div><div class="grid3">${cs.map(c => `<article class="panel tight course-card"><div class="course-art" style="background:linear-gradient(125deg,${c.art},#142f43)"><span>${c.abbr}</span></div><div class="row between"><span class="pill teal">${c.cat}</span><span class="mini">${c.level}</span></div><h3>${c.title}</h3><p>${c.short}</p><button class="btn primary full" data-act="open-course" data-i="${c.id}">Ver lección de muestra ${icon('arrow', 14)}</button><div class="meta"><span>${icon('book', 12)} ${c.lessons} lecciones</span><span>${icon('clock', 12)} ${c.time}</span></div></article>`).join('')}</div>`);
+    }
+    function leccion() {
+      const c = courses[S.course];
+      let body = S.lessonTab === 'contenido' ? `<div class="lesson-body"><h3>Aprende con una tarea real</h3><p>La inteligencia artificial puede ayudarte a redactar y revisar documentos. Para obtener una respuesta útil, explica quién recibirá el texto, cuál es el objetivo y qué formato necesitas.</p><div class="callout"><b>Ejemplo práctico</b><br>Necesitas redactar un mensaje a un cliente para confirmar una cita. Indica el contexto, el tono y los datos que deben aparecer.</div><h3>Guía de tres pasos</h3><p><b>1.</b> Define el objetivo de la tarea.<br><b>2.</b> Añade contexto y destinatario.<br><b>3.</b> Revisa el resultado antes de utilizarlo.</p></div>` : S.lessonTab === 'practica' ? `<div class="lesson-body"><h3>Ejercicio guiado</h3><p>Compara estas instrucciones. ¿Cuál es más clara para obtener un correo profesional?</p><div class="codebox">Poco específica: “Escribe un correo”.<br><br>Más útil: “Redacta un correo cordial de máximo 130 palabras para confirmar una visita de soporte el viernes a las 9:00 a. m. Incluye asunto y cierre”.</div><button class="btn primary" data-go="laboratorio" style="margin-top:18px">Practicar en el laboratorio ${icon('arrow')}</button></div>` : `<div class="lesson-body"><h3>Lo que aprendiste</h3><p>Una instrucción eficaz describe una tarea clara, indica restricciones útiles y se revisa de forma crítica. La IA puede cometer errores, por lo que siempre conviene comprobar el contenido.</p><div class="callout"><b>Idea clave:</b> la calidad de la salida depende tanto de la claridad de la solicitud como de la verificación posterior.</div></div>`;
+      return shell('leccion', `${header(c.title)}<p class="sub">Lección demostrativa · Nivel ${c.level} · No requiere conexión con un servicio de IA.</p><div class="grid2-1"><section class="panel"><div class="row between"><span class="pill teal">Lección 1 de ${c.lessons}</span><span class="pill gray">${icon('clock', 14)} 8 min</span></div><div class="tabrow">${[['contenido', 'Contenido'], ['practica', 'Práctica'], ['resumen', 'Resumen']].map(([k, v]) => `<button class="tab ${S.lessonTab === k ? 'active' : ''}" data-act="lesson-tab" data-tab="${k}">${v}</button>`).join('')}</div>${body}<div class="rule"></div><div class="row between"><button class="btn secondary" data-go="catalogo">${icon('back')} Volver al catálogo</button><button class="btn primary" data-act="lesson-done">${S.lessonComplete ? 'Lección completada ✓' : 'Marcar lección como completada'}</button></div></section><aside class="panel"><span class="glyph">${icon('chart')}</span><h3 style="margin-top:14px">Tu avance en esta muestra</h3><p>Un pequeño paso para aprender a utilizar IA.</p><div class="progress"><span style="width:${S.lessonComplete ? '100' : '20'}%"></span></div><div class="row between" style="margin-top:8px"><span class="mini">Progreso</span><b>${S.lessonComplete ? '100%' : '20%'}</b></div><div class="rule"></div><h3>Contenido de esta ruta</h3><div class="list-row"><span class="small">01. Introducción práctica</span><span class="pill ${S.lessonComplete ? 'teal' : 'gray'}">${S.lessonComplete ? 'Hecha' : 'Actual'}</span></div><div class="list-row"><span class="small">02. Dar contexto</span><span class="mini">Ejemplo</span></div><div class="list-row"><span class="small">03. Verificar resultados</span><span class="mini">Ejemplo</span></div><button class="btn secondary full" style="margin-top:19px" data-go="evaluacion">Ir a evaluación</button></aside></div>`);
+    }
+    function comparador() {
+      const tool = [[
+        'ChatGPT',
+        'Asistente conversacional',
+        'Redacción, ideas y análisis de textos',
+        'Verificar los datos que produce'
+      ], [
+        'Microsoft Copilot',
+        'Asistencia de productividad',
+        'Apoyo a documentos y tareas de oficina',
+        'Funciones dependen de licencias y entorno'
+      ], [
+        'Google Gemini',
+        'Asistente multimodal',
+        'Investigación guiada e ideación',
+        'Verificar fuentes y datos recientes'
+      ]];
+      return shell('comparador', `${header('¿Qué herramienta de IA te conviene?')}<p class="sub">Compara herramientas conocidas y decide según tu tarea, contexto y requisitos de privacidad.</p><div class="grid3">${tool.map((x, i) => `<div class="panel"><div class="tool-head"><span class="tool-logo">${['C', 'M', 'G'][i]}</span><div><b>${x[0]}</b><div class="mini">${x[1]}</div></div></div><div class="rule"></div><p><b>Uso habitual</b><br>${x[2]}</p><p><b>Precaución</b><br>${x[3]}</p><span class="pill teal">Información orientativa</span></div>`).join('')}</div><h2 class="section-title">Comparación por criterio</h2><div class="table-wrap"><table><thead><tr><th>Criterio</th><th>ChatGPT</th><th>Copilot</th><th>Gemini</th></tr></thead><tbody><tr><td>Producción de textos</td><td>Ejemplos y borradores</td><td>Apoyo documental</td><td>Ideas y borradores</td></tr><tr><td>Organización de información</td><td>Resúmenes y listas</td><td>Flujos de oficina</td><td>Síntesis y organización</td></tr><tr><td>Antes de compartir datos</td><td colspan="3">Revisar siempre las políticas, permisos y la confidencialidad</td></tr></tbody></table></div><p class="footnote">Comparación pedagógica general. Las funciones reales pueden variar según producto, versión y plan; este prototipo no consulta servicios externos.</p>`);
+    }
+    function laboratorio() {
+      return shell('laboratorio', `${header('Laboratorio de prompts')}<p class="sub">Practica cómo escribir instrucciones claras. La retroalimentación es demostrativa y no utiliza un modelo de IA real.</p><div class="grid2-1"><section class="panel"><div class="row between"><h3>Escribe tu instrucción</h3><span class="pill teal">Ejercicio guiado</span></div><div class="field"><label>Tipo de tarea</label><select id="prompt-task"><option>Redactar un correo</option><option>Organizar un documento</option><option>Preparar un informe</option><option>Comprender un tema</option></select></div><div class="field"><label>¿Qué le pedirías a una herramienta de IA?</label><textarea id="prompt-text" placeholder="Por ejemplo: redacta un correo...">Redacta un correo cordial para confirmar una visita de soporte al cliente el viernes. Incluye asunto y no excedas 120 palabras.</textarea></div><button class="btn primary" data-act="evaluate-prompt">Analizar instrucción ${icon('spark')}</button>${S.promptResult ? `<div class="result"><div class="row between"><h3>Retroalimentación simulada</h3><span class="pill teal">${S.promptResult.score}/4 criterios</span></div><p>${S.promptResult.feedback}</p><div class="codebox"><b>Propuesta de mejora:</b><br>${esc(S.promptResult.suggestion)}</div></div>` : ''}</section><aside class="panel"><span class="glyph">${icon('spark')}</span><h3 style="margin-top:14px">Las 4 claves de un buen prompt</h3>${[
+        ['Objetivo', 'Describe qué resultado necesitas.'],
+        ['Contexto', 'Explica la situación relevante.'],
+        ['Audiencia', 'Indica quién recibirá el contenido.'],
+        ['Formato', 'Pide extensión, estructura o estilo.']
+      ].map(([a, b], i) => `<div class="list-row"><div class="row"><span class="pill teal">${i + 1}</span><div><b>${a}</b><div class="mini">${b}</div></div></div></div>`).join('')}<p class="footnote">No escribas datos personales reales durante la prueba.</p></aside></div>`);
+    }
+    function recursos() {
+      return shell('recursos', `${header('Recursos para aprender haciendo')}<p class="sub">Consulta plantillas y guías reutilizables para tus actividades. Los ejemplos son demostrativos.</p><div class="grid2">${resources.map((r, i) => `<article class="panel"><span class="glyph">${icon('file')}</span><div class="row between" style="margin-top:15px"><h3>${r.title}</h3><span class="pill teal">${r.cat}</span></div><p>Material de ejemplo diseñado para apoyar el aprendizaje práctico.</p><button class="btn secondary" data-act="resource" data-i="${i}">Consultar recurso ${icon('arrow', 14)}</button></article>`).join('')}</div>`);
+    }
+    function responsable() {
+      let feedback = S.safeChoice === null ? '' : S.safeChoice === 0 ? 'Correcto. Debes anonimizar información y verificar las políticas de privacidad antes de usar herramientas externas.' : 'Revisa tu decisión: nunca debes compartir datos personales sin autorización y medidas de protección.';
+      return shell('responsable', `${header('Uso seguro y responsable de IA')}<p class="sub">Aprende a proteger información, detectar errores y comprender las limitaciones de herramientas generativas.</p><div class="grid3">${[['Privacidad', 'Evita compartir información confidencial y datos personales sin autorización.', 'lock'], ['Verificación', 'Contrasta cifras, nombres, fechas y afirmaciones antes de utilizarlas.', 'check'], ['Pensamiento crítico', 'La IA puede equivocarse o producir resultados incompletos.', 'shield']].map(([t, d, ic]) => `<article class="panel"><span class="glyph">${icon(ic)}</span><h3 style="margin-top:17px">${t}</h3><p>${d}</p></article>`).join('')}</div><h2 class="section-title">Caso de práctica</h2><div class="panel"><span class="pill gold">Situación cotidiana</span><h3 style="margin-top:14px">Necesitas resumir un archivo con datos personales de clientes.</h3><p>¿Qué harías antes de utilizar una herramienta externa de IA?</p><div class="grid2" style="margin:18px 0">${[['Anonimizar los datos y revisar las condiciones de uso', '0'], ['Enviar el documento completo sin comprobar nada', '1']].map(([t, v]) => `<button class="quiz-option ${String(S.safeChoice) === v ? 'selected' : ''}" data-act="safe-answer" data-i="${v}"><span class="q-letter">${v === '0' ? 'A' : 'B'}</span>${t}</button>`).join('')}</div>${feedback ? `<div class="callout">${feedback}</div>` : ''}</div>`);
+    }
+    function evaluacion() {
+      let n = S.quizIdx, q = questions[n];
+      let done = S.quizScore !== null;
+      return shell('evaluacion', `${header('Comprueba lo que aprendiste')}<p class="sub">Evaluación de muestra con preguntas de opción única sobre uso práctico y responsable de IA.</p><div class="grid2-1"><section class="panel">${done ? `<span class="pill teal">Evaluación finalizada</span><h2 style="font-size:26px;margin:19px 0">Tu resultado es ${S.quizScore} de 4</h2><p>${S.quizScore >= 3 ? 'Has completado satisfactoriamente la evaluación demostrativa.' : 'Puedes revisar la lección y volver a intentarlo.'}</p><div class="progress" style="margin:18px 0"><span style="width:${S.quizScore * 25}%"></span></div><div class="row"><button class="btn primary" data-go="progreso">Ver progreso</button><button class="btn secondary" data-act="restart-quiz">Volver a intentar</button></div>` : `<div class="row between"><span class="pill teal">Pregunta ${n + 1} de ${questions.length}</span><span class="mini">Selecciona una respuesta</span></div><h2 style="font-size:22px;letter-spacing:-.5px;margin:24px 0">${q.q}</h2>${q.a.map((a, i) => `<button class="quiz-option ${S.quizAnswers[n] === i ? 'selected' : ''}" data-act="quiz-answer" data-i="${i}"><span class="q-letter">${String.fromCharCode(65 + i)}</span>${a}</button>`).join('')}<div class="rule"></div><div class="row between"><button class="btn secondary" data-act="quiz-back" ${n === 0 ? 'disabled' : ''}>${icon('back')} Anterior</button><button class="btn primary" data-act="quiz-next" ${S.quizAnswers[n] === undefined ? 'disabled' : ''}>${n === questions.length - 1 ? 'Finalizar evaluación' : 'Siguiente pregunta'} ${icon('arrow')}</button></div>`}</section><aside class="panel"><h3>Tu avance</h3><p>Completa las cuatro preguntas. Al finalizar verás una puntuación demostrativa.</p><div class="progress"><span style="width:${done ? '100' : (n + 1) * 25}%"></span></div><div class="rule"></div>${questions.map((x, i) => `<div class="list-row"><span class="small">Pregunta ${i + 1}</span><span class="pill ${S.quizAnswers[i] !== undefined ? 'teal' : 'gray'}">${S.quizAnswers[i] !== undefined ? 'Respondida' : 'Pendiente'}</span></div>`).join('')}<p class="footnote">Esta evaluación no emite certificaciones académicas oficiales.</p></aside></div>`);
+    }
+    function progreso() {
+      let pct = (S.lessonComplete ? 50 : 0) + (S.quizScore !== null ? 50 : 0), cert = S.quizScore !== null && S.quizScore >= 3;
+      return shell('progreso', `${header('Mi progreso de aprendizaje')}<p class="sub">Consulta el avance de los ejercicios de demostración y una vista previa de la constancia.</p><div class="grid3"><div class="panel stat"><div class="glyph">${icon('book')}</div><div class="n">${S.lessonComplete ? '1/1' : '0/1'}</div><div class="lab">Lecciones de muestra</div></div><div class="panel stat"><div class="glyph">${icon('check')}</div><div class="n">${S.quizScore === null ? '—' : S.quizScore + '/4'}</div><div class="lab">Puntuación de evaluación</div></div><div class="panel stat"><div class="glyph">${icon('chart')}</div><div class="n">${pct}%</div><div class="lab">Recorrido demostrativo</div></div></div><h2 class="section-title">Estado del recorrido</h2><div class="grid2-1"><div class="panel"><div class="list-row"><div class="row">${icon('book')}<div><b>Lección inicial</b><div class="mini">Practicar la redacción de documentos</div></div></div><span class="pill ${S.lessonComplete ? 'teal' : 'gray'}">${S.lessonComplete ? 'Completada' : 'Pendiente'}</span></div><div class="list-row"><div class="row">${icon('check')}<div><b>Evaluación de conocimientos</b><div class="mini">Cuatro preguntas de ejemplo</div></div></div><span class="pill ${S.quizScore !== null ? 'teal' : 'gray'}">${S.quizScore !== null ? 'Finalizada' : 'Pendiente'}</span></div><div class="row" style="margin-top:20px"><button class="btn primary" data-go="leccion">Ir a lección</button><button class="btn secondary" data-go="evaluacion">Ir a evaluación</button></div></div><div class="panel"><h3>Vista previa de constancia</h3><div class="cert"><div class="eyebrow">AULA IA</div><h2>Constancia demostrativa</h2><p>Se reconoce la participación de</p><div class="big">${esc(S.name)}</div><p>en una ruta de aprendizaje de muestra.</p><span class="pill ${cert ? 'teal' : 'gray'}">${cert ? 'Ejercicio aprobado' : 'Disponible tras aprobar evaluación'}</span></div><p class="footnote">Sin validez académica, sin firma y sin emisión real. Se utiliza solamente para probar la interfaz.</p></div></div>`);
+    }
+    const PAGE = {
+      bienvenida: welcome,
+      ingreso: ingreso,
+      perfiles: perfiles,
+      inicio: dashboard,
+      catalogo: catalogo,
+      leccion: leccion,
+      comparador: comparador,
+      laboratorio: laboratorio,
+      recursos: recursos,
+      responsable: responsable,
+      evaluacion: evaluacion,
+      progreso: progreso
+    };
+    function toast(m) {
+      let old = document.querySelector('.toast');
+      if (old)
+        old.remove();
+      let t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = m;
+      document.body.append(t);
+      setTimeout(() => t.remove(), 3600);
+    }
+    function render() {
+      let p = window.__previewRoute || (location.hash || '#bienvenida').slice(1);
+      if (!PAGE[p])
+        p = 'bienvenida';
+      document.getElementById('app').innerHTML = PAGE[p]();
+      if (S.resource !== null) {
+        let r = resources[S.resource];
+        let modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `<div class="modal-dialog" role="dialog" aria-modal="true"><div class="row between"><span class="pill teal">${r.cat}</span><button class="btn ghost small" data-act="modal-close">Cerrar ×</button></div><h2>${r.title}</h2><p class="sub">Contenido educativo de demostración</p><div class="codebox">${esc(r.body)}</div><div class="row" style="margin-top:18px"><button class="btn primary" data-act="copy-resource">Copiar contenido</button><button class="btn secondary" data-act="modal-close">Volver a biblioteca</button></div></div>`;
+        document.body.append(modal);
+      }
+    }
+    window.addEventListener('hashchange', render);
+    document.addEventListener('submit', e => {
+      if (e.target.id === 'form-login') {
+        e.preventDefault();
+        let d = new FormData(e.target);
+        S.email = String(d.get('email') || '');
+        S.name = S.email.split('@')[0].split('.')[0] || 'Participante';
+        S.onboarding = true;
+        go('perfiles');
+        toast('Ingreso simulado: no se creó ninguna sesión real.');
+      }
+    });
+    document.addEventListener('click', async (e) => {
+      let nav = e.target.closest('[data-go]');
+      if (nav) {
+        go(nav.dataset.go);
+        return;
+      }
+      let b = e.target.closest('[data-act]');
+      if (!b)
+            return;
+      let a = b.dataset.act, i = Number(b.dataset.i);
+      if (a === 'guest') {
+        S.name = 'Participante';
+        S.onboarding = true;
+        go('perfiles');
+      }
+        else if (a === 'profile') {
+        S.profile = i;
+        render();
+        toast('Perfil seleccionado: ' + profiles[i].title);
+      }
+        else if (a === 'course-filter') {
+        S.courseFilter = b.dataset.filter;
+        render();
+      }
+        else if (a === 'open-course') {
+        S.course = i;
+        S.lessonTab = 'contenido';
+        go('leccion');
+      }
+        else if (a === 'lesson-tab') {
+        S.lessonTab = b.dataset.tab;
+        render();
+      }
+        else if (a === 'lesson-done') {
+        S.lessonComplete = true;
+        render();
+        toast('Lección de demostración completada.');
+      }
+        else if (a === 'evaluate-prompt') {
+        let val = document.getElementById('prompt-text')?.value.trim() || '';
+        if (val.length < 10) {
+          toast('Escribe una instrucción de al menos 10 caracteres.');
+          return;
+        }
+        let score = (val.length > 30 ? 1 : 0) + (/para|destinatario|cliente|estudiante|equipo/i.test(val) ? 1 : 0) + (/incluye|formato|palabras|lista|tabla|asunto/i.test(val) ? 1 : 0) + (/redacta|organiza|resume|explica|compara|escribe/i.test(val) ? 1 : 0);
+        S.promptResult = { score, feedback: score >= 3 ? 'La solicitud tiene varios elementos útiles. Recuerda verificar la respuesta antes de usarla.' : 'La instrucción podría mejorar añadiendo objetivo, audiencia, contexto y formato.', suggestion: `${val.replace(/[. ]+$/, '')}. Usa lenguaje claro, indica cualquier dato faltante y entrega el resultado en un formato fácil de revisar.` };
+        render();
+      }
+        else if (a === 'resource') {
+        S.resource = i;
+        render();
+      }
+        else if (a === 'modal-close') {
+        S.resource = null;
+        document.querySelector('.modal')?.remove();
+      }
+        else if (a === 'copy-resource') {
+        let txt = resources[S.resource].body;
+        try {
+          await navigator.clipboard.writeText(txt);
+          toast('Plantilla copiada.');
+        }
+            catch (e) {
+          toast('Selecciona el texto del recuadro y cópialo manualmente.');
+        }
+      }
+        else if (a === 'safe-answer') {
+        S.safeChoice = i;
+        render();
+      }
+        else if (a === 'quiz-answer') {
+        S.quizAnswers[S.quizIdx] = i;
+        render();
+      }
+        else if (a === 'quiz-back') {
+        S.quizIdx = Math.max(0, S.quizIdx - 1);
+        render();
+      }
+        else if (a === 'quiz-next') {
+        if (S.quizAnswers[S.quizIdx] === undefined)
+                return;
+        if (S.quizIdx === questions.length - 1) {
+          S.quizScore = questions.reduce((sum, q, j) => sum + (S.quizAnswers[j] === q.ok ? 1 : 0), 0);
+          render();
+        }
+            else {
+          S.quizIdx++;
+          render();
+        }
+      }
+        else if (a === 'restart-quiz') {
+        S.quizIdx = 0;
+        S.quizAnswers = {};
+        S.quizScore = null;
+        render();
+      }
+        else if (a === 'reset') {
+        S.profile = 0;
+        S.course = 0;
+        S.courseFilter = 'Todos';
+        S.lessonTab = 'contenido';
+        S.lessonComplete = false;
+        S.promptResult = null;
+        S.quizIdx = 0;
+        S.quizAnswers = {};
+        S.quizScore = null;
+        S.safeChoice = null;
+        S.resource = null;
+        S.email = '';
+        S.name = 'Participante';
+        go('bienvenida');
+      }
+    });
+    render();
+  </script>
+</body>
+</html>

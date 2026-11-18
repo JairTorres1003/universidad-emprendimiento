@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bocetos de baja fidelidad de Aula IA">
+  <title>Aula IA | Wireframes baja fidelidad</title>
+
+  <!--
+    ESTILOS
+    Contiene los estilos originales del prototipo.
+    Se mantiene dentro de este archivo HTML para poder compartirlo directamente.
+  -->
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: #eeeae2;
+      color: #303432;
+      font: 14px/1.5 Arial,Helvetica,sans-serif;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 225px minmax(0,1fr);
+      min-height: 100vh;
+    }
+    .panel-left {
+      background: #e2ded5;
+      border-right: 2px solid #b9b6b0;
+      padding: 23px 14px;
+    }
+    .brand {
+      font: 800 23px/1.1 Arial;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    .small {
+      font-size: 11px;
+      color: #6b716d;
+    }
+    .cap {
+      font-size: 10px;
+      color: #777f79;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin: 21px 8px 12px;
+    }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .menu button {
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 9px 12px;
+      font-size: 12px;
+      text-align: left;
+      color: #353c39;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .menu button:hover {
+      background: #f2f0eb;
+    }
+    .menu .active {
+      background: #f8f7f4;
+      border: 1px solid #9eaaa4;
+      font-weight: 750;
+    }
+    .panel-right {
+      padding: 25px 34px 45px;
+    }
+    .heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .heading h1 {
+      font-size: 23px;
+      letter-spacing: -.5px;
+      margin: 0;
+    }
+    .label {
+      font-size: 11px;
+      border: 1px dashed #818882;
+      padding: 5px 9px;
+      background: #faf9f5;
+    }
+    .sheet {
+      background: #fdfcf8;
+      min-height: 650px;
+      border: 2px solid #343b37;
+      box-shadow: 7px 7px 0 #c8c6be;
+      padding: 18px;
+      max-width: 1150px;
+    }
+    .browser {
+      border: 2px solid #9a9e99;
+      background: #f3f3ef;
+      display: flex;
+      align-items: center;
+      padding: 7px 11px;
+      gap: 10px;
+      font-size: 11px;
+    }
+    .dots {
+      letter-spacing: 2px;
+      color: #8f9590;
+    }
+    .url {
+      border: 1px solid #aab2a9;
+      background: #fff;
+      padding: 4px 12px;
+      border-radius: 3px;
+      color: #727971;
+      flex: 1;
+    }
+    .frame {
+      border: 1px solid #a2aaa2;
+      background: #fff;
+      padding: 17px 20px;
+      min-height: 560px;
+    }
+    .appbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #444c45;
+      padding-bottom: 11px;
+      margin-bottom: 18px;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 19px;
+    }
+    .chip {
+      border: 1px solid #69716d;
+      display: inline-block;
+      padding: 6px 10px;
+      background: #f4f3f0;
+      font-size: 11px;
+    }
+    .skh {
+      font-size: 23px;
+      font-weight: 800;
+      margin: 9px 0 10px;
+      letter-spacing: -.5px;
+    }
+    .hint {
+      font-size: 12px;
+      color: #616861;
+      margin: 0 0 14px;
+    }
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .columns3 {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 12px;
+    }
+    .wire {
+      border: 2px dashed #a3aaa3;
+      background: repeating-linear-gradient(145deg,#fafafa,#fafafa 8px,#f7f7f6 8px,#f7f7f6 16px);
+      border-radius: 2px;
+      padding: 14px;
+      min-height: 90px;
+    }
+    .wire.solid {
+      border-style: solid;
+      background: #fbfbf9;
+    }
+    .wire b {
+      font-size: 13px;
+    }
+    .wire p {
+      font-size: 11px;
+      color: #727972;
+      margin: 7px 0 10px;
+    }
+    .blank {
+      height: 12px;
+      background: #e2e5e0;
+      margin: 10px 0;
+      width: 94%;
+    }
+    .blank.short {
+      width: 51%;
+    }
+    .blank.med {
+      width: 75%;
+    }
+    .placeholder {
+      height: 85px;
+      border: 1px dashed #8b948d;
+      background: #efefeb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #808781;
+      font-size: 12px;
+    }
+    .button {
+      border: 2px solid #434b45;
+      background: #e4e4df;
+      padding: 8px 14px;
+      display: inline-block;
+      color: #303630;
+      font-weight: 750;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background: #d0d3ce;
+    }
+    .input {
+      height: 35px;
+      border: 1px solid #9da59f;
+      background: #fcfcfc;
+      padding: 8px 11px;
+      color: #939d94;
+      margin: 8px 0;
+      font-size: 12px;
+    }
+    .line {
+      height: 1px;
+      background: #b7beb7;
+      margin: 15px 0;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .between {
+      justify-content: space-between;
+    }
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .flow .step {
+      border: 1px solid #a5aea6;
+      background: #f1f3ef;
+      padding: 6px 9px;
+      font-size: 10px;
+    }
+    .pagenum {
+      font-size: 11px;
+      margin-top: 12px;
+      color: #636963;
+      max-width: 1150px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .board {
+      height: 150px;
+      border: 2px solid #b1b8b0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: repeating-linear-gradient(45deg,#eee,#eee 6px,#f9f9f7 6px,#f9f9f7 12px);
+      font-size: 12px;
+      color: #848b83;
+    }
+    .outline {
+      border: 1px dashed #88918a;
+      padding: 11px;
+      margin: 10px 0;
+      font-size: 12px;
+    }
+    .status {
+      font-size: 10px;
+      color: #717a71;
+      margin-top: 10px;
+    }
+    .pct {
+      height: 17px;
+      border: 1px solid #a6afa6;
+      background: #eff0eb;
+      padding: 2px;
+      margin-top: 10px;
+    }
+    .pct span {
+      display: block;
+      height: 100%;
+      background: #bfc9bf;
+    }
+    .titlecard {
+      background: #eeeeea;
+      border: 1px solid #c4c8c3;
+      padding: 16px;
+    }
+    .titlecard h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+    .narrow {
+      max-width: 470px;
+      margin: 25px auto;
+    }
+    .narrow .wire {
+      padding: 23px;
+    }
+    .fakecheck {
+      display: inline-block;
+      border: 1px solid #8b928b;
+      width: 12px;
+      height: 12px;
+      margin-right: 6px;
+    }
+    .note {
+      background: #f4f4ef;
+      border-left: 3px solid #9ba19b;
+      padding: 10px;
+      font-size: 11px;
+      margin-top: 13px;
+    }
+    .navbottom {
+      margin-top: 17px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .meta {
+      font-size: 10px;
+      color: #797f77;
+    }
+    .chev {
+      color: #636d63;
+    }
+    .mobileonly {
+      display: none;
+    }
+    @media(max-width:850px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .panel-left {
+        position: static;
+      }
+      .menu {
+        display: flex;
+        flex-direction: row;
+        overflow: auto;
+      }
+      .menu button {
+        white-space: nowrap;
+      }
+      .panel-right {
+        padding: 17px;
+      }
+      .sheet {
+        padding: 10px;
+        box-shadow: none;
+      }
+      .frame {
+        padding: 11px;
+      }
+      .columns3,.columns {
+        grid-template-columns: 1fr;
+      }
+      .heading {
+        flex-wrap: wrap;
+      }
+      .cap {
+        display: none;
+      }
+    }
+    @media print {
+      .panel-left {
+        display: none;
+      }
+      .layout {
+        display: block;
+      }
+      .panel-right {
+        padding: 0;
+      }
+      .sheet {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- El contenido del prototipo se construye desde el script inferior. -->
+  <div id="app"></div>
+
+  <!--
+    COMPORTAMIENTO
+    Contiene las pantallas, la navegación y las acciones de demostración.
+    No utiliza servicios externos ni una base de datos.
+  -->
+  <script>
+    const screens = [
+      ['bienvenida', 'Bienvenida'],
+      ['ingreso', 'Registro e ingreso'],
+      ['perfiles', 'Perfil de aprendizaje'],
+      ['inicio', 'Panel principal'],
+      ['catalogo', 'Catálogo de cursos'],
+      ['leccion', 'Lecciones'],
+      ['comparador', 'Comparador IA'],
+      ['laboratorio', 'Laboratorio de prompts'],
+      ['recursos', 'Biblioteca'],
+      ['responsable', 'Uso responsable'],
+      ['evaluacion', 'Evaluación'],
+      ['progreso', 'Progreso y constancia']
+    ];
+    function box(title, desc = '', extra = '') {
+      return `<div class="wire"><b>${title}</b>${desc ? `<p>${desc}</p>` : ''}${extra}</div>`;
+    }
+    function line() {
+      return `<div class="blank"></div><div class="blank med"></div><div class="blank short"></div>`;
+    }
+    function btn(t, next) {
+      return `<button class="button" data-go="${next}">${t}</button>`;
+    }
+    function flow(steps) {
+      return `<div class="flow">${steps.map((s, i) => `${i ? ' <span class="chev">→</span> ' : ''}<span class="step">${s}</span>`).join('')}</div>`;
+    }
+    const bodies = {
+      bienvenida: () => `<div class="appbar"><span class="logo">[AULA IA]</span><span>${btn('INGRESAR', 'ingreso')}</span></div><div class="columns" style="align-items:center;margin-top:45px"><div><span class="chip">PROPUESTA EDUCATIVA</span><h2 class="skh">Aprende IA con tareas reales</h2>${line()}<p class="hint">[Descripción breve de la plataforma educativa]</p><div class="row">${btn('COMENZAR', 'ingreso')}${btn('VER CURSOS', 'catalogo')}</div></div><div class="board">[Imagen de bienvenida / ilustración pendiente]</div></div>${flow([
+        'Bienvenida',
+        'Registro',
+        'Selección de ruta',
+        'Aprendizaje'
+      ])}`,
+      ingreso: () => `<div class="appbar"><span class="logo">[AULA IA]</span><span class="chip">ACCESO</span></div><div class="narrow">${box('Ingreso / registro', 'Formulario de acceso representativo', `<div class="input">[Correo electrónico]</div><div class="input">[Contraseña]</div><div class="row">${btn('INGRESAR', 'perfiles')}${btn('CREAR CUENTA', 'perfiles')}</div>`)}<p class="note">La autenticación está representada, no implementada.</p></div>`,
+      perfiles: () => `<div class="appbar"><span class="logo">[AULA IA]</span><span class="chip">ELEGIR PERFIL</span></div><h2 class="skh">¿En qué área deseas aprender?</h2><p class="hint">[Selección de rutas formativas]</p><div class="columns3">${[
+        'Administración',
+        'Tecnología y soporte',
+        'Comercial y atención',
+        'Creatividad',
+        'Formación académica'
+      ].map(x => box(x, '[Descripción breve]', btn('SELECCIONAR', 'inicio'))).join('')}</div>`,
+      inicio: () => `<div class="appbar"><span class="logo">[AULA IA]</span><span class="chip">MENÚ | PERFIL</span></div><h2 class="skh">Panel principal del usuario</h2><div class="columns3">${box('Cursos recomendados', '[Tarjeta y acceso]', btn('VER CURSOS', 'catalogo'))}${box('Progreso actual', '[Indicador de avance]', '<div class="pct"><span style="width:25%"></span></div>')}${box('Próxima actividad', '[Lección por continuar]', btn('CONTINUAR', 'leccion'))}</div><div class="columns" style="margin-top:16px">${box('Atajos', '[Laboratorio de instrucciones]', btn('ABRIR', 'laboratorio'))}${box('Herramientas disponibles', '[Comparador / biblioteca]', btn('COMPARAR', 'comparador'))}</div>`,
+      catalogo: () => `<div class="appbar"><span class="logo">[AULA IA]</span><span class="chip">CATÁLOGO</span></div><h2 class="skh">Explorar cursos</h2><div class="input">[Buscar o filtrar por categoría]</div><div class="columns3">${[
+        'Redacción profesional con IA',
+        'Organizar información',
+        'Prompts desde cero',
+        'Uso responsable',
+        'Soporte técnico',
+        'Creatividad'
+      ].map(t => box(`[Imagen de curso]`, t, btn('VER CURSO', 'leccion'))).join('')}</div>`,
+      leccion: () => `<div class="appbar"><span class="logo">[AULA IA]</span><span class="chip">CURSO 01 / LECCIÓN 01</span></div><h2 class="skh">Lección: crear instrucciones claras</h2><div class="columns"><div class="wire solid"><div class="board">[Espacio de contenido multimedia]</div><div style="margin-top:18px">${line()}</div><span class="chip">[Ejercicio guiado]</span><p class="hint">[Explicación del tema y ejemplos]</p><div class="row">${btn('PRÁCTICA', 'laboratorio')}${btn('FINALIZAR', 'evaluacion')}</div></div>${box('Índice de lecciones', `[01] Introducción<br>[02] Dar contexto<br>[03] Verificar resultados`, btn('VER EVALUACIÓN', 'evaluacion'))}</div>`,
+      comparador: () => `<div class="appbar"><span class="logo">[AULA IA]</span><span class="chip">COMPARADOR</span></div><h2 class="skh">Comparar herramientas de IA</h2><div class="columns3">${['ChatGPT', 'Microsoft Copilot', 'Google Gemini'].map(x => box(`[LOGO] ${x}`, '[Funciones / ventajas / precauciones]')).join('')}</div><div class="wire solid" style="margin-top:15px"><b>[Tabla comparativa]</b><div class="line"></div>${line()}</div>`,
+      laboratorio: () => `<div class="appbar"><span class="logo">[AULA IA]</span><span class="chip">LABORATORIO</span></div><h2 class="skh">Practicar con instrucciones (prompts)</h2><div class="columns"><div class="wire solid"><b>[Seleccionar tarea]</b><div class="input">Redactar / Organizar / Explicar</div><b>[Escribir instrucción]</b><div class="board" style="height:120px;background:#fff">[Área de texto]</div><p>${btn('ANALIZAR PROMPT', 'laboratorio')}</p></div><div class="wire"><b>[Retroalimentación simulada]</b><div class="blank"></div><div class="blank med"></div><div class="line"></div><b>[Sugerencia de mejora]</b>${line()}</div></div>`,
+      recursos: () => `<div class="appbar"><span class="logo">[AULA IA]</span><span class="chip">RECURSOS</span></div><h2 class="skh">Biblioteca de recursos y plantillas</h2><div class="columns3">${[
+        'Plantillas de correos',
+        'Guías para resumir',
+        'Lista de verificación',
+        'Ejemplos técnicos',
+        'Plantillas de informes',
+        'Prompts de trabajo'
+      ].map(x => box(`[ARCHIVO] ${x}`, '[Breve descripción]', btn('CONSULTAR', 'recursos'))).join('')}</div>`,
+      responsable: () => `<div class="appbar"><span class="logo">[AULA IA]</span><span class="chip">USO SEGURO</span></div><h2 class="skh">Aprender a utilizar IA responsablemente</h2><div class="columns3">${['Privacidad', 'Verificar información', 'Limitaciones de IA'].map(x => box(`[MÓDULO] ${x}`, '[Consejos y ejemplos]')).join('')}</div><div class="wire solid" style="margin-top:16px"><b>[Situación a resolver]</b><p>¿Qué harías antes de compartir documentos de clientes?</p><div class="row"><span class="fakecheck"></span> Opción A <span class="fakecheck" style="margin-left:20px"></span> Opción B</div><p>${btn('CONTINUAR', 'evaluacion')}</p></div>`,
+      evaluacion: () => `<div class="appbar"><span class="logo">[AULA IA]</span><span class="chip">EVALUACIÓN</span></div><h2 class="skh">Evaluación de conocimientos</h2><div class="columns"><div class="wire solid"><span class="chip">Pregunta 1 de 4</span><h3>[¿Qué acción sería adecuada?]</h3>${['Respuesta A', 'Respuesta B', 'Respuesta C'].map(x => `<div class="outline"><span class="fakecheck"></span>${x}</div>`).join('')}<div class="row">${btn('ANTERIOR', 'leccion')}${btn('FINALIZAR', 'progreso')}</div></div>${box('Seguimiento', `[Barra de progreso]<br>${line()}`)}</div>`,
+      progreso: () => `<div class="appbar"><span class="logo">[AULA IA]</span><span class="chip">MI PROGRESO</span></div><h2 class="skh">Avance y certificados</h2><div class="columns3">${box('Lecciones realizadas', '[Número de lecciones]')}${box('Puntuación', '[Resultados de evaluación]')}${box('Porcentaje de avance', '', '<div class="pct"><span style="width:62%"></span></div>')}</div><div class="columns" style="margin-top:16px">${box('Historial de aprendizaje', `[Rutas y evaluaciones realizadas]${line()}`, btn('VER CURSOS', 'catalogo'))}<div class="wire solid"><b>[Vista previa de certificado]</b><div class="board" style="margin-top:9px;height:155px">[Constancia de muestra]</div></div></div>`
+    };
+    function render() {
+      let key = window.__previewRoute || location.hash.slice(1) || 'bienvenida', ix = screens.findIndex(x => x[0] === key);
+      if (ix < 0) {
+        key = 'bienvenida';
+        ix = 0;
+      }
+      document.getElementById('app').innerHTML = `<div class="layout"><aside class="panel-left"><div class="brand">AULA IA</div><div class="small">PROTOTIPO DE BAJA FIDELIDAD<br>Bocetos y wireframes digitales</div><div class="cap">PANTALLAS (12)</div><div class="menu">${screens.map((x, i) => `<button class="${x[0] === key ? 'active' : ''}" data-go="${x[0]}">${String(i + 1).padStart(2, '0')} · ${x[1]}</button>`).join('')}</div><p class="note">Estructura exploratoria. Elementos esquemáticos, sin diseño definitivo ni servicios reales.</p></aside><main class="panel-right"><div class="heading"><h1>Wireframe ${String(ix + 1).padStart(2, '0')} · ${screens[ix][1]}</h1><div class="label">PUNTO 3.1 · BAJA RESOLUCIÓN</div></div><div class="sheet"><div class="browser"><span class="dots">● ● ●</span><div class="url">aula-ia / pantalla / ${key}</div></div><div class="frame">${bodies[key]()}</div></div><div class="pagenum"><span>Representación en escala de grises · disposición provisional de componentes</span><span>${ix + 1}/12</span></div><div class="navbottom"><button class="button" data-go="${screens[(ix + 11) % 12][0]}">← Pantalla anterior</button><span class="small">Mapa de navegación: seleccione pantallas en la izquierda o los botones del boceto.</span><button class="button" data-go="${screens[(ix + 1) % 12][0]}">Siguiente pantalla →</button></div></main></div>`;
+    }
+    window.addEventListener('hashchange', render);
+    document.addEventListener('click', e => {
+      let b = e.target.closest('[data-go]');
+      if (b) {
+        location.hash = b.dataset.go;
+        render();
+        window.scrollTo(0, 0);
+      }
+    });
+    render();
+  </script>
+</body>
+</html>
